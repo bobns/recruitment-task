@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\CategoryServiceProvider;
+use App\Providers\PostServiceProvider;
 
 return [
 
@@ -177,6 +178,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         CategoryServiceProvider::class,
+        PostServiceProvider::class,
 
     ],
 

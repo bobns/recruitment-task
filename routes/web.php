@@ -19,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PostController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
 Route::get('posts/create', [PostController::class, 'create'])->middleware(['auth'])->name('post-form');
 Route::post('posts/create', [PostController::class, 'store'])->middleware(['auth'])->name('create-post');
-Route::get('posts/{post-id}', [PostController::class, 'edit'])->middleware(['auth'])->name('edit-post-form');
-Route::post('posts/{post-id}', [PostController::class, 'update'])->middleware(['auth'])->name('update-post');
+Route::get('posts/{postId}', [PostController::class, 'edit'])->middleware(['auth'])->name('edit-post-form');
+Route::put('posts/{postId}', [PostController::class, 'update'])->middleware(['auth'])->name('update-post');
+Route::delete('posts/{postId}/delete', [PostController::class, 'destroy'])->middleware(['auth'])->name('delete-post');
 Route::get('categories/create', [CategoryController::class, 'create'])->middleware(['auth'])->name('category-form');
 Route::post('categories/create', [CategoryController::class, 'store'])->middleware(['auth'])->name('create-category');
 
