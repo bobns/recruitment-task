@@ -15,22 +15,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [PostController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/', [PostController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
-Route::get('posts/create', [PostController::class, 'create'])->middleware(['auth'])->name('post-form');
-Route::post('posts/create', [PostController::class, 'store'])->middleware(['auth'])->name('create-post');
-Route::get('posts/{postId}', [PostController::class, 'edit'])->middleware(['auth'])->name('edit-post-form');
-Route::put('posts/{postId}', [PostController::class, 'update'])->middleware(['auth'])->name('update-post');
-Route::delete('posts/{postId}/delete', [PostController::class, 'destroy'])->middleware(['auth'])->name('delete-post');
-Route::get('categories/create', [CategoryController::class, 'create'])->middleware(['auth'])->name('category-form');
-Route::post('categories/create', [CategoryController::class, 'store'])->middleware(['auth'])->name('create-category');
+    Route::group(['prefix' => 'posts'], function () {
+        Route::get('/', [PostController::class, 'index'])->name('posts');
+        Route::get('/create', [PostController::class, 'create'])->name('post-form');
+        Route::post('/create', [PostController::class, 'store'])->name('create-post');
+        Route::get('/{postId}', [PostController::class, 'edit'])->name('edit-post-form');
+        Route::put('/{postId}', [PostController::class, 'update'])->name('update-post');
+        Route::delete('/{postId}/delete', [PostController::class, 'destroy'])->name('delete-post');
+    });
 
-Route::get('/categories', [CategoryController::class, 'index'])->middleware(['auth'])->name('categories');
-Route::get('posts', [PostController::class, 'index'])->middleware(['auth'])->name('posts');
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('categories');
+        Route::get('/create', [CategoryController::class, 'create'])->name('category-form');
+        Route::post('/create', [CategoryController::class, 'store'])->name('create-category');
+        Route::get('/{categoryId}', [CategoryController::class, 'edit'])->name('edit-category-form');
+        Route::put('/{categoryId}', [CategoryController::class, 'update'])->name('update-category');
+        Route::delete('/{categoryId}/delete', [CategoryController::class, 'destroy'])->name('delete-category');
+    });
+});
 
-Route::get('/categories/{categoryId}', [CategoryController::class, 'edit'])->middleware(['auth'])->name('edit-category-form');
-Route::put('/categories/{categoryId}', [CategoryController::class, 'update'])->middleware(['auth'])->name('update-category');
-Route::delete('categories/{categoryId}/delete', [CategoryController::class, 'destroy'])->middleware(['auth'])->name('delete-category');
+
+
+
+
+
 
 
 // Route::get('/dashboard', function () {

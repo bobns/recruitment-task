@@ -16,6 +16,8 @@ class CategoryController extends Controller
 
     public function index()
     {
+        $this->authorize('read');
+
         $categories = $this->categoryRepository->list();
 
         return view('category.categories', ['categories' => $categories]);
@@ -23,16 +25,22 @@ class CategoryController extends Controller
 
     public function create()
     {
+        $this->authorize('create');
+
         return view('category.create-category-form');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create');
+
         $data = $request->validate([
             'category' => ['required', 'string', 'min:3', 'max:100']
         ]);
 
-        $this->categoryRepository->create($data['category']);
+        $data['user_id'] = auth()->user()->id;
+
+        $this->categoryRepository->create($data);
 
         return redirect()->route('categories')->with('message', 'Category has been added succesfully');
     }
@@ -40,6 +48,8 @@ class CategoryController extends Controller
     public function edit(int $categoryId)
     {
         $category = $this->categoryRepository->get($categoryId);
+
+        $this->authorize('edit-category', $category);
 
         if ($category) {
             return view('category.edit-category-form', ['category' => $category]);
@@ -50,11 +60,13 @@ class CategoryController extends Controller
 
     public function update(int $categoryId, Request $request)
     {
+        $category = $this->categoryRepository->get($categoryId);
+
+        $this->authorize('edit-category', $category);
+
         $data = $request->validate([
             'category' => ['required', 'string', 'min:3', 'max:100']
         ]);
-
-        $category = $this->categoryRepository->get($categoryId);
 
         if ($category) {
             $this->categoryRepository->update($category, $data['category']);
@@ -66,6 +78,8 @@ class CategoryController extends Controller
 
     public function destroy(int $categoryId, Request $request)
     {
+        $this->authorize('delete');
+
         $categoryId = (int) $request->input('category_id');
         $category = $this->categoryRepository->get($categoryId);
 

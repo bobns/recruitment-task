@@ -28,7 +28,9 @@
                             <th class="py-2 px-4">Title</th>
                             <th class="py-2 px-4 w-1/3">Categories</th>
                             <th class="py-2 px-4 w-1/3">Message</th>
+                            @canany(['delete', 'create'])
                             <th class="py-2 px-4">Actions</th>
+                            @endcanany
                         </tr>
                     </thead>
                     <tbody>
@@ -46,12 +48,16 @@
 
                             </td>
                             <td class="py-2 px-4 border-b border-r border-gray-200">{{ $post->message }}</td>
+                            @canany(['edit-posts', 'delete', 'create'], $post)
                             <td class="flex-wrap py-2 px-4 border-b border-r border-gray-200">
                                 <div class="flex flex-row">
+                                    @can('edit-posts', $post)
                                     <button class="block mr-8">
                                         <a class="underline text-lg"
                                             href="{{ route('edit-post-form', ['postId' => $post->id]) }}">Edit</a>
                                     </button>
+                                    @endcan
+                                    @can('delete')
                                     <form action="{{route('delete-post', ['postId' => $post->id])}}" method="POST">
                                         {{ method_field('DELETE') }}
                                         @csrf
@@ -59,8 +65,10 @@
                                         <button type="submit"
                                             class="block bg-gray-800 text-white px-4 py-1.5 rounded-lg">Delete</button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
+                            @endcanany
                         </tr>
                         @endforeach
                     </tbody>

@@ -30,7 +30,8 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = $this->postModel::create([
             'title' => $data['title'],
-            'message' => $data['message']
+            'message' => $data['message'],
+            'user_id' => $data['user_id']
         ]);
 
         $post->categories()->sync($data['category']);

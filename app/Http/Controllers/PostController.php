@@ -19,15 +19,14 @@ class PostController extends Controller
 
     public function dashboard()
     {
-        if (auth()->check()) {
-            return view('dashboard');
-        } else {
-            redirect()->route('login');
-        }
+        $user = auth()->user();
+        return view('dashboard', ['user' => $user]);
     }
 
     public function index()
     {
+        $this->authorize('read');
+
         $posts = $this->postRepository->list();
 
         return view('post.posts', ['posts' => $posts]);
@@ -35,17 +34,23 @@ class PostController extends Controller
 
     public function create()
     {
+        $this->authorize('create');
+
         $categories = $this->categoryRepository->list();
         return view('post.create-post-form', ['categories' => $categories]);
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create');
+
         $data = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:100'],
             'category' => ['required', 'array',],
             'message' => ['required', 'string', 'min:10', 'max:400']
         ]);
+
+        $data['user_id'] = auth()->user()->id;
 
         $this->postRepository->create($data);
 
@@ -55,6 +60,9 @@ class PostController extends Controller
     public function edit(int $postId)
     {
         $post = $this->postRepository->get($postId);
+
+        $this->authorize('edit-posts', $post);
+
         $categories = $this->categoryRepository->list();
 
         if ($post) {
@@ -66,13 +74,15 @@ class PostController extends Controller
 
     public function update(int $postId, Request $request)
     {
+        $post = $this->postRepository->get($postId);
+
+        $this->authorize('edit-posts', $post);
+
         $data = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:100'],
             'category' => ['required', 'array',],
             'message' => ['required', 'string', 'min:10', 'max:400']
         ]);
-
-        $post = $this->postRepository->get($postId);
 
         if ($post) {
             $this->postRepository->update($post, $data);
@@ -84,6 +94,8 @@ class PostController extends Controller
 
     public function destroy(int $postId, Request $request)
     {
+        $this->authorize('delete');
+
         $postId = (int) $request->input('post_id');
         $post = $this->postRepository->get($postId);
 

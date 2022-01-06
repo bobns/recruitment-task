@@ -25,6 +25,7 @@
                 </div>
             </div>
             <div class="flex flex-row items-center">
+                @can('create')
                 <div class="px-4">
                     <x-nav-link :href="route('post-form')" :active="request()->routeIs('post-form')">
                         {{ __('Add post') }}
@@ -35,6 +36,7 @@
                         {{ __('Add category') }}
                     </x-nav-link>
                 </div>
+                @endcan
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-dropdown align="right" width="48">

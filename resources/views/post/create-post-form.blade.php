@@ -18,6 +18,19 @@
         </div>
     </div>
     @endif
+
+    @if (!$categories->first())
+    <div class="pt-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-red-300 border-b border-gray-200">
+                    You need to add category before adding a post
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -36,11 +49,7 @@
                                 class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 required>
                                 @foreach ($categories ?? [] as $category)
-                                <option value="{{$category->id}}" {{-- @if (old('category'))
-                                    {{old('category')==in_array($category->id,
-                                    old('category')) ?
-                                    'selected' : ''}} @endif --}}
-                                    >{{$category->name}}
+                                <option value="{{$category->id}}">{{$category->name}}
                                 </option>
                                 @endforeach
                             </select>

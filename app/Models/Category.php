@@ -11,10 +11,16 @@ class Category extends Model
 
     protected $fillable = [
         'name',
+        'created_by_user_id'
     ];
 
     public function posts()
     {
         return $this->belongsToMany(Post::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
     }
 }

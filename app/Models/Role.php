@@ -13,6 +13,10 @@ class Role extends Model
         'name'
     ];
 
+    public const IS_ADMIN = 1;
+    public const IS_MODERATOR = 2;
+    public const IS_READER = 3;
+
     public function users()
     {
         return $this->hasMany(User::class);

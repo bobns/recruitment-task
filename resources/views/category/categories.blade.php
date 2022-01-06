@@ -26,7 +26,9 @@
                             <th class="py-2 px-4 w-1/12">No.</th>
                             <th class="py-2 px-4 w-1/12">Id</th>
                             <th class="py-2 px-4">Name</th>
+                            @canany(['delete', 'create'])
                             <th class="py-2 px-4 w-3/12">Action</th>
+                            @endcanany
                         </tr>
                     </thead>
                     <tbody>
@@ -35,20 +37,28 @@
                             <td class="py-2 px-4 border-b border-r border-gray-200">{{ $loop->iteration }}</td>
                             <td class="py-2 px-4 border-b border-r border-gray-200">{{ $category->id }}</td>
                             <td class="py-2 px-4 border-b border-r border-gray-200">{{ $category->name }}</td>
-                            <td class="flex flex-row flex-wrap py-2 px-4 border-b border-r border-gray-200">
-                                <button class="block mr-8 ">
-                                    <a class="underline text-lg"
-                                        href="{{ route('edit-category-form', ['categoryId' => $category->id]) }}">Edit</a>
-                                </button>
-                                <form action="{{route('delete-category', ['categoryId' => $category->id])}}"
-                                    method="POST">
-                                    {{ method_field('DELETE') }}
-                                    @csrf
-                                    <input type="hidden" name="category_id" value="{{$category->id}}">
-                                    <button type="submit"
-                                        class="block bg-gray-800 text-white px-4 py-1.5 rounded-lg">Delete</button>
-                                </form>
+                            @canany(['edit-category', 'delete', 'create'], $category)
+                            <td class=" py-2 px-4 border-b border-r border-gray-200">
+                                <div class="flex flex-row flex-wrap">
+                                    @can('edit-category', $category)
+                                    <button class="block mr-8 ">
+                                        <a class="underline text-lg"
+                                            href="{{ route('edit-category-form', ['categoryId' => $category->id]) }}">Edit</a>
+                                    </button>
+                                    @endcan
+                                    @can('delete')
+                                    <form action="{{route('delete-category', ['categoryId' => $category->id])}}"
+                                        method="POST">
+                                        {{ method_field('DELETE') }}
+                                        @csrf
+                                        <input type="hidden" name="category_id" value="{{$category->id}}">
+                                        <button type="submit"
+                                            class="block bg-gray-800 text-white px-4 py-1.5 rounded-lg">Delete</button>
+                                    </form>
+                                    @endcan
+                                </div>
                             </td>
+                            @endcanany
                         </tr>
                         @endforeach
                     </tbody>

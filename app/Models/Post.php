@@ -12,10 +12,16 @@ class Post extends Model
     protected $fillable = [
         'title',
         'message',
+        'user_id'
     ];
 
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
     }
 }

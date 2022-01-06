@@ -16,7 +16,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $this->categoryModel = $category;
     }
 
-    public function list(): Collection
+    public function list(): ?Collection
     {
         return $this->categoryModel::all();
     }
@@ -26,10 +26,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->categoryModel::find($categoryId) ?? null;
     }
 
-    public function create(string $categoryName): void
+    public function create(array $data): void
     {
         $this->categoryModel::create([
-            'name' => $categoryName
+            'name' => $data['category'],
+            'created_by_user_id' => $data['user_id']
         ]);
     }
 
